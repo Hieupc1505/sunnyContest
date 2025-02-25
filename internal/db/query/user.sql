@@ -1,0 +1,4 @@
+-- name: Add :one
+INSERT INTO users (email, password)
+VALUES ($1, $2)
+    RETURNING id, email, password, created_at;

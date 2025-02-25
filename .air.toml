@@ -1,0 +1,32 @@
+# Cấu hình chung
+root = "."
+tmp_dir = "tmp"
+
+# Tập tin hoặc thư mục cần theo dõi để reload
+[watcher]
+# Thư mục gốc của source code (chỉ theo dõi thư mục `app`)
+dirs = ["."]
+# Loại tập tin cần theo dõi
+extensions = [".go", ".tpl", ".tmpl", ".html"]
+# Loại tập tin không cần theo dõi
+exclude_dirs = ["vendor", "tmp", "bin", "node_modules"]
+
+# Cấu hình build
+[build]
+# Chế độ chạy (chạy file binary trực tiếp)
+cmd = "go build -o ./tmp/main ./cmd/server"
+# File đầu ra sau khi build
+binary = "./tmp/main"
+# Lệnh chạy lại sau khi binary build xong
+full_bin = "sh -c './tmp/main'"
+# Dùng cache để tăng tốc build
+enable_cache = true
+
+# Cấu hình logging
+[log]
+time = true
+
+# Cấu hình môi trường
+[env]
+GO_ENV = "development"
+PORT = "8080"

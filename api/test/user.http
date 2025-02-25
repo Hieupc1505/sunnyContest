@@ -1,0 +1,11 @@
+@base=http://localhost:8080/api/auth
+
+
+### Auth
+POST {{base}}/signup
+Content-Type: application/json
+
+{
+  "email": "testuser@gmail.com",
+  "password": "testpass"
+}

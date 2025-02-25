@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="WSL - Ubuntu-22.04" type="wsl" uuid="08812439-efdc-4352-9290-a85e33078d79">
+        <config>
+          <option name="distributionMsId" value="Ubuntu-22.04" />
+          <option name="projectRootOnTarget" value="{exitCode=0, timeout=false, cancelled=false, stdout=/tmp/tmp.P9EnFVPy13&#10;, stderr=}/Default (Template) Project" />
+        </config>
+      </target>
+    </targets>
+  </component>
+</project>

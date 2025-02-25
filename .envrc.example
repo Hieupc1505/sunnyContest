@@ -1,0 +1,14 @@
+export MODE="dev"
+export PUBLIC_HOST="http://localhost"
+export PORT="8080"
+export DOCKER_DB_NAME="snippet"
+export DB_NAME="code-snippet-share"
+export DB_USER="root"
+export DB_PASSWORD="secret"
+export DB_SOURCE="postgresql://root:secret@localhost:5432/SunnyContest?sslmode=disable"
+export LOG_LEVEL="debug"
+export LOG_PATH="./storages/logs/dev.001.log"
+export LOG_MAX_BACKUPS=3
+export LOG_MAX_AGE=28
+export LOG_MAX_SIZE=500
+export LOG_COMPRESS=true
