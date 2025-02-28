@@ -1,11 +1,34 @@
-@base=http://localhost:8080/api/auth
+@base=http://localhost:8080
+@auth=/api/v1
 
 
-### Auth
-POST {{base}}/signup
+### Register
+POST {{base}}{{auth}}/public/register
 Content-Type: application/json
 
 {
-  "email": "testuser@gmail.com",
-  "password": "testpass"
+  "username": "vanhiv3s66cdg3",
+  "password": "123456gd"
+}
+
+### Login
+POST {{base}}{{auth}}/public/login
+Content-Type: application/json
+
+{
+  "username": "vanhiv3s66cdg3",
+  "password": "123456gd"
+}
+###
+@access_token_paseto=v2.local.QVgEjU7ttwMH0yPHkZ5Fpvpfk-pg2yUWjQ2AuI0X3E2pmViwD94zfqxUYdX72afyTERkBPNmT0Zu8us4y39ixtiIGgidafglb4Nlp3leTabaKevaKCXFQMdLKBmucdmGHaPGTkdU3U1g_4FSj_PX1GmljhGyUvxi4Aj9IpmksKrFiUgJFm7-1UyN1NCniAlKRFYxn7oT1QVd9_UqGOBeqe9fAgJaFaMRzKMG_8_XLN0k6t0Te9epilTwQf2FbSVOWjmQ1s0B5beDRzUMx4g.bnVsbA
+@access_token_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhNjI2OGEzLTRhMzAtNGJiZi05OGQ3LWZjNTdjNjUxNjJlMiIsInVzZXJfaWQiOjEsInJvbGUiOjIsImlzc3VlZF9hdCI6IjIwMjUtMDItMjhUMDA6NDI6NDUuNDAyNTE1NDQxKzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDFUMDA6NDI6NDUuNDAyNTE1ODUyKzA3OjAwIn0.gSrDyJkkub0sME7Jt1g9Q5nv8gPx-JLmz_Ehl6CL4To
+
+### Register nickname
+POST {{base}}{{auth}}/register-nickname
+Content-Type: application/json
+Authorization: Bearer {{access_token_jwt}}
+
+{
+  "nickname": "theking-origin",
+  "type": 9
 }

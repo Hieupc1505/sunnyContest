@@ -9,14 +9,16 @@ import (
 )
 
 type Config struct {
-	PublicHost string
-	Port       string
-	Mode       string
-	DBUser     string
-	DBPassword string
-	DBSource   string
-	DBName     string
-	Logger     types.LoggerSetting
+	PublicHost   string
+	Port         string
+	Mode         string
+	DBUser       string
+	DBPassword   string
+	DBSource     string
+	DBName       string
+	Logger       types.LoggerSetting
+	SymmetricKey string
+	ImgbbAPIKey  string
 }
 
 const (
@@ -42,8 +44,10 @@ func initConfig() Config {
 		DBPassword: getEnv("DB_PASSWORD", "mypassword"),
 		DBName:     getEnv("DB_NAME", "cars"),
 
-		DBSource: getEnvOrError("DB_SOURCE"),
-		Logger:   logger,
+		DBSource:     getEnvOrError("DB_SOURCE"),
+		SymmetricKey: getEnvOrError("SYMMETRIC_KEY"),
+		ImgbbAPIKey:  getEnvOrError("IMGBB_API_KEY"),
+		Logger:       logger,
 	}
 }
 

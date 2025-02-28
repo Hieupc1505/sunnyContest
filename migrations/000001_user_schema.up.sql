@@ -1,7 +1,11 @@
--- db/migrations/000001_create_users_table.up.sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT now()
+CREATE TABLE sf_user (
+     id BIGSERIAL PRIMARY KEY,
+     username VARCHAR(255) UNIQUE NOT NULL,
+     password TEXT NOT NULL,
+     role INT NOT NULL DEFAULT 2,  -- 0: admin, 2: user, 4: teacher
+     status INT NOT NULL DEFAULT 0, --  0 active, 1 locked, 2 disabled, 3 deleted
+     token TEXT,
+     token_expired timestamptz,
+     created_time timestamptz  NOT NULL  DEFAULT now(),
+     updated_time timestamptz  NOT NULL  DEFAULT now()
 );

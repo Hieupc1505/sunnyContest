@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	ErrEmailInvalidLen    = errors.New("invalid email length")
-	ErrEmailEmpty         = errors.New("empty email")
+	ErrUsernameInvalidLen = errors.New("invalid username length")
+	ErrUsernameEmpty      = errors.New("empty username")
 	ErrPasswordInvalidLen = errors.New("invalid password length")
 )
 

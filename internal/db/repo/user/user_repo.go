@@ -8,11 +8,16 @@ import (
 
 // Reader Create a reader interface
 type Reader interface {
+	CheckUsernameExists(ctx context.Context, username string) (bool, error)
+	GetUserByUsername(ctx context.Context, username string) (db.GetUserByUsernameRow, error)
 }
 
 // Writer NewReader returns
 type Writer interface {
-	Add(ctx context.Context, arg db.AddParams) (db.User, error)
+	Add(ctx context.Context, arg db.AddParams) (db.AddRow, error)
+	UpdateUserToken(ctx context.Context, arg db.UpdateUserTokenParams) error
+	AddProfile(ctx context.Context, arg db.AddProfileParams) (db.AddProfileRow, error)
+	UpdateUserRole(ctx context.Context, arg db.UpdateUserRoleParams) error
 }
 
 // ReadWriter NewWriter creates a new Writer

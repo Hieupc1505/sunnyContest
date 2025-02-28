@@ -1,10 +1,7 @@
 package middleware
 
 import (
-	"fmt"
 	app "go-rest-api-boilerplate/internal"
-	"log"
-	"log/slog"
 	"net/http"
 	"strings"
 	"sync"
@@ -93,7 +90,6 @@ func extractIP(c *gin.Context) string {
 func (rl *RateLimiter) RateLimitMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := extractIP(c)
-		fmt.Println("ip: ", ip)
 		// Handle blacklist
 		if rl.IsBlacklisted(ip) {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"e": app.ErrForbidden})
@@ -108,9 +104,7 @@ func (rl *RateLimiter) RateLimitMiddleware() gin.HandlerFunc {
 
 		// Enforce rate limit
 		limiter := rl.getLimiter(ip)
-		slog.Info("limiter: ", limiter, !limiter.Allow())
 		if !limiter.Allow() {
-			log.Printf("Rate limit exceeded for IP: %s", ip)
 			c.AbortWithStatusJSON(429, gin.H{"e": app.ErrTooManyRequests})
 			return
 		}

@@ -1,0 +1,45 @@
+@base=http://localhost:8080
+@auth=/api/v1/public
+@subject=/api/v1/web
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdjZTY4MjE1LWUyN2ItNGFmMy1hZTc0LTMxM2RjYzNkYzE1NiIsInVzZXJfaWQiOjIsInJvbGUiOjksImlzc3VlZF9hdCI6IjIwMjUtMDItMjhUMTY6MDQ6MTQuOTQ3MzEyMTczKzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDFUMTY6MDQ6MTQuOTQ3MzEyNTg0KzA3OjAwIn0.VNNMgMJsDRwqsTG3OxVMIu9X9BJdoC7TYqfA0G3j-Og
+
+### Login
+POST {{base}}{{auth}}/login
+Content-Type: application/json
+
+{
+  "username": "vanhieudev",
+  "password": "123456"
+}
+
+### Add Post
+POST {{base}}{{subject}}/subject/create
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "Name": "Ma",
+  "Description": "Learn to speak English fluently",
+  "Tags": ["english", "en", "foreigner"]
+}
+
+### Get all subjects
+GET {{base}}{{subject}}/subjects
+Authorization: Bearer {{token}}
+
+
+### Get subject by id
+GET {{base}}{{subject}}/subject/3
+Authorization: Bearer {{token}}
+
+### Update subject
+PUT {{base}}{{subject}}/subject
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "Id": 13,
+  "Name": "Eng con chưa hỏi",
+  "Description": "Learn to speak English fluently",
+  "Tags": ["english", "en", "foreigner"]
+}

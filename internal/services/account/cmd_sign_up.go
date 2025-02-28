@@ -3,17 +3,20 @@ package account
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-rest-api-boilerplate/api/passwordutil"
 	app "go-rest-api-boilerplate/internal"
+	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/internal/services"
 	"go-rest-api-boilerplate/pkg/errsx"
+	"log/slog"
 )
 
-func signupUser(email string, password string) (*User, error) {
+func signupUser(username string, password string) (*User, error) {
 	var errs errsx.Map
-	emailAddr, err := NewEmail(email)
+	u, err := NewUsername(username)
 	if err != nil {
 		fmt.Println("Email error")
-		errs.Set("email", err)
+		errs.Set("username", err)
 	}
 
 	pwd, err := NewPassword(password)
@@ -26,22 +29,29 @@ func signupUser(email string, password string) (*User, error) {
 		return nil, errs.ToError()
 	}
 
-	user := NewUser(emailAddr, pwd)
+	user := NewUser(u, pwd)
 	return user, nil
 }
 
-func (s *Service) SignUp(ctx *gin.Context, email, password string) (*User, error) {
-	user, err := signupUser(email, password)
+func (s *Service) SignUp(ctx *gin.Context, username, password string) (*db.AddRow, error) {
+	user, err := signupUser(username, password)
 	if err != nil {
-		return nil, services.NewError(app.ErrBadRequest, err)
+		return nil, services.NewError(err, nil)
 	}
 
-	//todo: hash password user
+	hashPass, err := passwordutil.HashPassword(user.Password)
+	if err != nil {
+		return nil, services.NewError(err, app.ErrInternalServerError)
+	}
+
+	user.Password = hashPass
 
 	// Lưu user vào db
-	if _, err = s.repo.Add(ctx, *user.ToParams()); err != nil {
-		return nil, services.NewError(app.ErrInternalServerError, err)
+	ur, err := s.repo.Add(ctx, *user.ToParams())
+	if err != nil {
+		slog.Info("Error adding user", "error", err)
+		return nil, services.NewError(err, app.ErrInternalServerError)
 	}
 
-	return user, nil
+	return &ur, nil
 }

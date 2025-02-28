@@ -2,9 +2,14 @@ package db
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	config "go-rest-api-boilerplate/configs/app"
 	"log"
+)
+
+var (
+	DB_NOT_FOUND = pgx.ErrNoRows
 )
 
 // Connect to postgrest db

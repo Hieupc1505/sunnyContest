@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go-rest-api-boilerplate/api/middleware"
 	config "go-rest-api-boilerplate/configs/app"
@@ -11,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type API struct {
@@ -25,7 +27,7 @@ type API struct {
 	store  *repo.Store
 }
 
-// NewAPI creates a new API
+// New creates a new API
 func New(
 	log *logger.LoggerZap,
 	longTasks *sync.WaitGroup,
@@ -87,4 +89,13 @@ func (a *API) registerMiddleware() {
 
 	// Thêm middleware rate limit vào router
 	a.app.Use(rateLimiter.RateLimitMiddleware())
+	// Cấu hình CORS
+	a.app.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true, // Cho phép tất cả các domain
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length", "Sf-Token"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour, // Giữ cache CORS trong 12 giờ
+	}))
 }

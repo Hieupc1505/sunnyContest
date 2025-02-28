@@ -9,7 +9,17 @@ import (
 )
 
 type Querier interface {
-	Add(ctx context.Context, arg AddParams) (User, error)
+	Add(ctx context.Context, arg AddParams) (AddRow, error)
+	AddProfile(ctx context.Context, arg AddProfileParams) (AddProfileRow, error)
+	AddSubject(ctx context.Context, arg AddSubjectParams) (AddSubjectRow, error)
+	CheckUsernameExists(ctx context.Context, username string) (bool, error)
+	DeleteSubject(ctx context.Context, id int64) error
+	GetAllSubjects(ctx context.Context, arg GetAllSubjectsParams) ([]SfSubject, error)
+	GetSubjectByID(ctx context.Context, id int64) (SfSubject, error)
+	GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error)
+	UpdateSubject(ctx context.Context, arg UpdateSubjectParams) (UpdateSubjectRow, error)
+	UpdateUserRole(ctx context.Context, arg UpdateUserRoleParams) error
+	UpdateUserToken(ctx context.Context, arg UpdateUserTokenParams) error
 }
 
 var _ Querier = (*Queries)(nil)

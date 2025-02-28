@@ -6,6 +6,8 @@ tmp_dir = "tmp"
 [watcher]
 # Thư mục gốc của source code (chỉ theo dõi thư mục `app`)
 dirs = ["."]
+# Lệnh build lại
+cmd = "go build -o tmp/main ."
 # Loại tập tin cần theo dõi
 extensions = [".go", ".tpl", ".tmpl", ".html"]
 # Loại tập tin không cần theo dõi

@@ -18,7 +18,7 @@ createdb:
 dropdb:
 	docker exec -it ${DOCKER_DB_NAME} dropdb ${DB_NAME}
 
-#migrate create -ext sql -dir db/migration -seq init_schema
+#migrate create -ext sql -dir migrations -seq init_schema
 #Định nghĩa target để thực hiện tạo table db/migration
 migrateup:
 	migrate -path migrations -database "${DB_SOURCE}" -verbose up

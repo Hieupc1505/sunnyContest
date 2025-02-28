@@ -7,27 +7,133 @@ package db
 
 import (
 	"context"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const add = `-- name: Add :one
-INSERT INTO users (email, password)
-VALUES ($1, $2)
-    RETURNING id, email, password, created_at
+INSERT INTO sf_user (
+    username, password
+) VALUES (
+$1, $2
+) RETURNING id, username, role, status, created_time
 `
 
 type AddParams struct {
-	Email    string `json:"email"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-func (q *Queries) Add(ctx context.Context, arg AddParams) (User, error) {
-	row := q.db.QueryRow(ctx, add, arg.Email, arg.Password)
-	var i User
+type AddRow struct {
+	ID          int64     `json:"id"`
+	Username    string    `json:"username"`
+	Role        int32     `json:"role"`
+	Status      int32     `json:"status"`
+	CreatedTime time.Time `json:"created_time"`
+}
+
+func (q *Queries) Add(ctx context.Context, arg AddParams) (AddRow, error) {
+	row := q.db.QueryRow(ctx, add, arg.Username, arg.Password)
+	var i AddRow
 	err := row.Scan(
 		&i.ID,
-		&i.Email,
-		&i.Password,
-		&i.CreatedAt,
+		&i.Username,
+		&i.Role,
+		&i.Status,
+		&i.CreatedTime,
 	)
 	return i, err
+}
+
+const checkUsernameExists = `-- name: CheckUsernameExists :one
+SELECT EXISTS (
+    SELECT 1 FROM sf_user WHERE username = $1
+)
+`
+
+func (q *Queries) CheckUsernameExists(ctx context.Context, username string) (bool, error) {
+	row := q.db.QueryRow(ctx, checkUsernameExists, username)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const getUserByUsername = `-- name: GetUserByUsername :one
+SELECT
+    u.id,
+    u.username,
+    u.password,
+    u.role,
+    u.status,
+    u.created_time,
+    u.updated_time,
+    COALESCE(p.nickname, '') AS nickname,
+    COALESCE(p.avatar, '') AS avatar
+FROM sf_user u
+         LEFT JOIN sf_profile p ON u.id = p.user_id
+WHERE u.username = $1
+    LIMIT 1
+`
+
+type GetUserByUsernameRow struct {
+	ID          int64     `json:"id"`
+	Username    string    `json:"username"`
+	Password    string    `json:"password"`
+	Role        int32     `json:"role"`
+	Status      int32     `json:"status"`
+	CreatedTime time.Time `json:"created_time"`
+	UpdatedTime time.Time `json:"updated_time"`
+	Nickname    string    `json:"nickname"`
+	Avatar      string    `json:"avatar"`
+}
+
+func (q *Queries) GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error) {
+	row := q.db.QueryRow(ctx, getUserByUsername, username)
+	var i GetUserByUsernameRow
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Password,
+		&i.Role,
+		&i.Status,
+		&i.CreatedTime,
+		&i.UpdatedTime,
+		&i.Nickname,
+		&i.Avatar,
+	)
+	return i, err
+}
+
+const updateUserRole = `-- name: UpdateUserRole :exec
+UPDATE sf_user
+SET role = $2, updated_time = now()
+WHERE id = $1
+`
+
+type UpdateUserRoleParams struct {
+	ID   int64 `json:"id"`
+	Role int32 `json:"role"`
+}
+
+func (q *Queries) UpdateUserRole(ctx context.Context, arg UpdateUserRoleParams) error {
+	_, err := q.db.Exec(ctx, updateUserRole, arg.ID, arg.Role)
+	return err
+}
+
+const updateUserToken = `-- name: UpdateUserToken :exec
+UPDATE sf_user
+SET token = $2, token_expired = $3, updated_time = now()
+WHERE id = $1
+`
+
+type UpdateUserTokenParams struct {
+	ID           int64              `json:"id"`
+	Token        pgtype.Text        `json:"token"`
+	TokenExpired pgtype.Timestamptz `json:"token_expired"`
+}
+
+func (q *Queries) UpdateUserToken(ctx context.Context, arg UpdateUserTokenParams) error {
+	_, err := q.db.Exec(ctx, updateUserToken, arg.ID, arg.Token, arg.TokenExpired)
+	return err
 }
