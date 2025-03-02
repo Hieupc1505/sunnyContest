@@ -5,10 +5,55 @@
 package db
 
 import (
+	"database/sql/driver"
+	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type LevelQuestion string
+
+const (
+	LevelQuestionEASY   LevelQuestion = "EASY"
+	LevelQuestionMEDIUM LevelQuestion = "MEDIUM"
+	LevelQuestionHARD   LevelQuestion = "HARD"
+)
+
+func (e *LevelQuestion) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = LevelQuestion(s)
+	case string:
+		*e = LevelQuestion(s)
+	default:
+		return fmt.Errorf("unsupported scan type for LevelQuestion: %T", src)
+	}
+	return nil
+}
+
+type NullLevelQuestion struct {
+	LevelQuestion LevelQuestion `json:"level_question"`
+	Valid         bool          `json:"valid"` // Valid is true if LevelQuestion is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullLevelQuestion) Scan(value interface{}) error {
+	if value == nil {
+		ns.LevelQuestion, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.LevelQuestion.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullLevelQuestion) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.LevelQuestion), nil
+}
 
 type SfProfile struct {
 	ID          int64     `json:"id"`
@@ -17,6 +62,21 @@ type SfProfile struct {
 	Avatar      string    `json:"avatar"`
 	CreatedTime time.Time `json:"created_time"`
 	UpdatedTime time.Time `json:"updated_time"`
+}
+
+type SfQuestion struct {
+	ID            int64         `json:"id"`
+	SubjectID     int64         `json:"subject_id"`
+	UserID        int64         `json:"user_id"`
+	Level         LevelQuestion `json:"level"`
+	Question      string        `json:"question"`
+	QuestionType  string        `json:"question_type"`
+	QuestionImage pgtype.Text   `json:"question_image"`
+	Answers       string        `json:"answers"`
+	AnswerType    string        `json:"answer_type"`
+	State         int32         `json:"state"`
+	CreatedTime   time.Time     `json:"created_time"`
+	UpdatedTime   time.Time     `json:"updated_time"`
 }
 
 type SfSubject struct {

@@ -11,12 +11,18 @@ import (
 type Querier interface {
 	Add(ctx context.Context, arg AddParams) (AddRow, error)
 	AddProfile(ctx context.Context, arg AddProfileParams) (AddProfileRow, error)
+	AddQuestion(ctx context.Context, arg AddQuestionParams) (SfQuestion, error)
 	AddSubject(ctx context.Context, arg AddSubjectParams) (AddSubjectRow, error)
 	CheckUsernameExists(ctx context.Context, username string) (bool, error)
+	DeleteQuestion(ctx context.Context, id int64) error
 	DeleteSubject(ctx context.Context, id int64) error
 	GetAllSubjects(ctx context.Context, arg GetAllSubjectsParams) ([]SfSubject, error)
+	GetQuestionByID(ctx context.Context, id int64) (SfQuestion, error)
+	GetQuestionBySubjectID(ctx context.Context, arg GetQuestionBySubjectIDParams) ([]SfQuestion, error)
 	GetSubjectByID(ctx context.Context, id int64) (SfSubject, error)
+	GetTotalQuestion(ctx context.Context, subjectID int64) (int64, error)
 	GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error)
+	UpdateQuestion(ctx context.Context, arg UpdateQuestionParams) (SfQuestion, error)
 	UpdateSubject(ctx context.Context, arg UpdateSubjectParams) (UpdateSubjectRow, error)
 	UpdateUserRole(ctx context.Context, arg UpdateUserRoleParams) error
 	UpdateUserToken(ctx context.Context, arg UpdateUserTokenParams) error

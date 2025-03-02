@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -48,4 +49,30 @@ func (s *SfSubject) UnmarshalJSON(data []byte) error {
 
 	s.Tags = pgtype.Text{String: string(tagsJSON), Valid: true}
 	return nil
+}
+
+type AnswerItem struct {
+	IsCorrect bool   `json:"is_correct"`
+	Ans       string `json:"ans"`
+}
+
+// MarshalJSON ghi đè phương thức MarshalJSON để xử lý trường Answers
+func (q SfQuestion) MarshalJSON() ([]byte, error) {
+	// Định nghĩa một struct tạm thời để marshaling
+	type Alias SfQuestion
+
+	// Parse Answers từ string sang []AnswerItem
+	var answerItems []AnswerItem
+	if err := json.Unmarshal([]byte(q.Answers), &answerItems); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal answers: %v", err)
+	}
+
+	// Trả về JSON với Answers là []AnswerItem
+	return json.Marshal(&struct {
+		Answers []AnswerItem `json:"answers"`
+		Alias
+	}{
+		Answers: answerItems,
+		Alias:   (Alias)(q),
+	})
 }

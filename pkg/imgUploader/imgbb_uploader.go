@@ -59,7 +59,6 @@ func (i *ImgbbUpload) Upload(image string) (UploadResult, error) {
 	if err := json.Unmarshal(resp.Body(), &ImgbbResponse); err != nil {
 		return UploadResult{}, err
 	}
-
 	return UploadResult{Url: ImgbbResponse.Data.Url, Thumb: ImgbbResponse.Data.Thumb.Url}, nil
 
 }

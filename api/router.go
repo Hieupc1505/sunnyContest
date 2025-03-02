@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-rest-api-boilerplate/api/handler"
 	"go-rest-api-boilerplate/api/handler/account"
+	"go-rest-api-boilerplate/api/handler/question"
 	"go-rest-api-boilerplate/api/handler/subject"
 	"go-rest-api-boilerplate/api/response"
 	config "go-rest-api-boilerplate/configs/app"
@@ -24,18 +25,21 @@ func (a *API) registerRoutes() {
 	uploader := imgUploader.NewImgbbUpload(config.Envs.ImgbbAPIKey)
 
 	h := &handler.Handler{
-		App:            a.app,
-		Tasks:          a.tasks,
-		UserRepo:       a.store.AccountRepo,
-		AccountService: a.store.AccountAPI,
-		SubjectRepo:    a.store.SubjectRepo,
-		SubjectService: a.store.SubjectService,
-		Token:          maker,
-		ImgUploader:    uploader,
+		App:             a.app,
+		Tasks:           a.tasks,
+		UserRepo:        a.store.AccountRepo,
+		AccountService:  a.store.AccountAPI,
+		SubjectRepo:     a.store.SubjectRepo,
+		SubjectService:  a.store.SubjectService,
+		QuestionRepo:    a.store.QuestionRepo,
+		QuestionService: a.store.QuestionService,
+		Token:           maker,
+		ImgUploader:     uploader,
 	}
 
 	account.Routes(h)
 	subject.Routes(h)
+	question.Routes(h)
 
 	a.app.GET("/Ping", func(ctx *gin.Context) {
 		time.Sleep(time.Second)

@@ -7,10 +7,12 @@ import (
 	config "go-rest-api-boilerplate/configs/app"
 	"go-rest-api-boilerplate/configs/logger"
 	"go-rest-api-boilerplate/internal/db/repo"
+	question_repo "go-rest-api-boilerplate/internal/db/repo/question"
 	subject_repo "go-rest-api-boilerplate/internal/db/repo/subject"
 	user_repo "go-rest-api-boilerplate/internal/db/repo/user"
 	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/internal/services/account"
+	"go-rest-api-boilerplate/internal/services/question"
 	"go-rest-api-boilerplate/internal/services/subject"
 	"log"
 	"log/slog"
@@ -53,7 +55,13 @@ func main() {
 	if err != nil {
 		log.Fatal("Error creating account service: ", err)
 	}
-	store := repo.New(userRepo, accountService, subRepo, subService)
+
+	quesRepo := question_repo.NewQuestionService(conn)
+	quesService, err := question.NewService(ctx, quesRepo)
+	if err != nil {
+		log.Fatal("Error creating question service: ", err)
+	}
+	store := repo.New(userRepo, accountService, subRepo, subService, quesRepo, quesService)
 
 	envPort, err := strconv.ParseInt(config.Envs.Port, 0, 64)
 	if err != nil {
