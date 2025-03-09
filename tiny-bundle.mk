@@ -6,6 +6,6 @@ TAGS='static,osuergo,netgo'
 EXTLDFLAGS="-static -Oz -s"
 LDFLAGS='-linkmode=external -extldflags $(EXTLDFLAGS)'
 build:
-	@go build -tags $(TAGS) -ldflags $(LDFLAGS) -o bin/app_prod cmd/main.go
+	@go build -tags $(TAGS) -ldflags $(LDFLAGS) -o bin/app_prod cmd/server/main.go
 	@upx bin/app_prod
 	@echo "compiled you application with all its assets to a single binary => bin/app_prod"
