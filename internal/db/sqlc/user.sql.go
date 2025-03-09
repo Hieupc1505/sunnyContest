@@ -59,6 +59,49 @@ func (q *Queries) CheckUsernameExists(ctx context.Context, username string) (boo
 	return exists, err
 }
 
+const getUserByID = `-- name: GetUserByID :one
+SELECT
+    u.id,
+    u.username,
+    u.role,
+    u.status,
+    u.created_time,
+    u.updated_time,
+    COALESCE(p.nickname, '') AS nickname,
+    COALESCE(p.avatar, '') AS avatar
+FROM sf_user u
+LEFT JOIN sf_profile p ON u.id = p.user_id
+WHERE u.id = $1
+LIMIT 1
+`
+
+type GetUserByIDRow struct {
+	ID          int64     `json:"id"`
+	Username    string    `json:"username"`
+	Role        int32     `json:"role"`
+	Status      int32     `json:"status"`
+	CreatedTime time.Time `json:"created_time"`
+	UpdatedTime time.Time `json:"updated_time"`
+	Nickname    string    `json:"nickname"`
+	Avatar      string    `json:"avatar"`
+}
+
+func (q *Queries) GetUserByID(ctx context.Context, id int64) (GetUserByIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i GetUserByIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Role,
+		&i.Status,
+		&i.CreatedTime,
+		&i.UpdatedTime,
+		&i.Nickname,
+		&i.Avatar,
+	)
+	return i, err
+}
+
 const getUserByUsername = `-- name: GetUserByUsername :one
 SELECT
     u.id,

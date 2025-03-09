@@ -1,6 +1,7 @@
 package account
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-rest-api-boilerplate/api/contextutil"
 	"go-rest-api-boilerplate/api/handler"
@@ -16,7 +17,7 @@ import (
 )
 
 func Routes(h *handler.Handler) {
-	authGroup := h.App.Group("/api/v1/")
+	authGroup := h.App.Group("/api/v1")
 	{
 		authGroup.POST("/public/register", Signup(h))
 		authGroup.POST("/public/login", Login(h))
@@ -25,6 +26,26 @@ func Routes(h *handler.Handler) {
 	authSGroup := authGroup.Use(middleware.AuthMiddleware(h))
 	{
 		authSGroup.POST("/register-nickname", RegisterNickname(h))
+		authSGroup.GET("/get-current-user", GetCurrentUser(h))
+	}
+}
+
+func GetCurrentUser(h *handler.Handler) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userID, err := contextutil.GetUser(ctx)
+		if err != nil {
+			slog.ErrorContext(ctx, "Error getting user from context", "error", err)
+			response.Error(ctx, app.ErrPermissionDenied)
+			return
+		}
+		fmt.Println("userID:::", userID)
+		profile, err := h.UserRepo.GetUserByID(ctx, userID)
+		if err != nil {
+			slog.ErrorContext(ctx, "Error getting user by ID", "error", err)
+			response.Error(ctx, nil)
+			return
+		}
+		response.Success(ctx, profile)
 	}
 }
 

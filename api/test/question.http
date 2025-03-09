@@ -1,7 +1,7 @@
 @base=http://localhost:8080
 @auth=/api/v1/public
 @main=/api/v1/web
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQwMmRlMDVmLWE3OGItNDJiZS05ZDMwLWEzYmU5NzFmOTc4NCIsInVzZXJfaWQiOjEsInJvbGUiOjksImlzc3VlZF9hdCI6IjIwMjUtMDMtMDJUMjI6NDA6MzMuMTY4MDkzMzAzKzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDNUMjI6NDA6MzMuMTY4MDkzNTg0KzA3OjAwIn0.w778pRKV1mI1frD78pTvy7U0h4Y05VqJcG_fNMl7hvk
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OGEwYmFkLTA1YWQtNDU1OS04OWNlLWQzMWViOTY2ZWM4OSIsInVzZXJfaWQiOjUsInJvbGUiOjQsImlzc3VlZF9hdCI6IjIwMjUtMDMtMDhUMDQ6MTg6MDQuOTA5ODcxNDQ2KzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDlUMDQ6MTg6MDQuOTA5ODcxNzI3KzA3OjAwIn0.GEW2Zjfza8zgSP9YiKRH0X8Mr4G-0uttolzOmxpTpcg
 
 ### Login
 POST {{base}}{{auth}}/login
@@ -13,5 +13,5 @@ Content-Type: application/json
 }
 
 ### Get list
-GET {{base}}{{main}}/questions/total?sid=2
+GET {{base}}{{main}}/questions/total?sid=1
 Authorization: Bearer {{token}}

@@ -11,17 +11,22 @@ import (
 	"strings"
 )
 
+var (
+	AuthorizationKey = "Authorization"
+)
+
 func AuthMiddleware(h *handler.Handler) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		tokenString := ctx.GetHeader("Authorization")
+		tokenString := ctx.GetHeader(AuthorizationKey)
 		if tokenString == "" {
-			response.Error(ctx, app.ErrInvalidData)
+			response.Error(ctx, app.ErrInvalidToken)
 			ctx.Abort()
 			return
 		}
 		token := strings.Split(tokenString, " ")[1]
 		claims, err := h.Token.VerifyToken(token)
 		if err != nil {
+			ctx.Abort()
 			if errors.Is(err, app.ErrTokenExpired) {
 				response.Error(ctx, err)
 				return

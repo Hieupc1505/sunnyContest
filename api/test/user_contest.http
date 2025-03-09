@@ -1,0 +1,11 @@
+@base=http://localhost:8080
+@auth=/api/v1/public
+@main=/api/v1/web
+@contest=/api/v1/contest
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjljN2RmNzZlLTUzZWUtNDQ1Mi1iMTU0LWMwZTVmZGE0ZDIyMiIsInVzZXJfaWQiOjMsInJvbGUiOjIsImlzc3VlZF9hdCI6IjIwMjUtMDMtMDhUMDA6MDM6MTAuNDQzMDYxNTU1KzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDlUMDA6MDM6MTAuNDQzMDYxOTc2KzA3OjAwIn0.6iT1MA8Og7cDpWpVr1HBd5_AiUUk-Mz8EicvURqdZYI
+
+@ContestID=/117
+
+###
+GET {{base}}{{contest}}{{ContestID}}
+Authorization: Bearer {{token}}

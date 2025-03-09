@@ -13,16 +13,38 @@ type Querier interface {
 	AddProfile(ctx context.Context, arg AddProfileParams) (AddProfileRow, error)
 	AddQuestion(ctx context.Context, arg AddQuestionParams) (SfQuestion, error)
 	AddSubject(ctx context.Context, arg AddSubjectParams) (AddSubjectRow, error)
+	AddUserContest(ctx context.Context, arg AddUserContestParams) (SfUserContest, error)
 	CheckUsernameExists(ctx context.Context, username string) (bool, error)
+	CreateContest(ctx context.Context, arg CreateContestParams) (SfContest, error)
 	DeleteQuestion(ctx context.Context, id int64) error
 	DeleteSubject(ctx context.Context, id int64) error
 	GetAllSubjects(ctx context.Context, arg GetAllSubjectsParams) ([]SfSubject, error)
+	GetContestByID(ctx context.Context, id int64) (SfContest, error)
+	GetContestBySubjectID(ctx context.Context, subjectID int64) ([]SfContest, error)
+	GetContestDetailByID(ctx context.Context, id int64) (GetContestDetailByIDRow, error)
+	GetContestLiveByID(ctx context.Context, id int64) (GetContestLiveByIDRow, error)
+	GetContestsForTeacher(ctx context.Context, arg GetContestsForTeacherParams) ([]GetContestsForTeacherRow, error)
+	GetListLiveContest(ctx context.Context) ([]GetListLiveContestRow, error)
+	GetMyContestLive(ctx context.Context, userID int64) (GetMyContestLiveRow, error)
 	GetQuestionByID(ctx context.Context, id int64) (SfQuestion, error)
 	GetQuestionBySubjectID(ctx context.Context, arg GetQuestionBySubjectIDParams) ([]SfQuestion, error)
+	GetRandomQuestions(ctx context.Context, arg GetRandomQuestionsParams) ([]SfQuestion, error)
 	GetSubjectByID(ctx context.Context, id int64) (SfSubject, error)
 	GetTotalQuestion(ctx context.Context, subjectID int64) (int64, error)
+	GetUserByID(ctx context.Context, id int64) (GetUserByIDRow, error)
 	GetUserByUsername(ctx context.Context, username string) (GetUserByUsernameRow, error)
+	GetUserContest(ctx context.Context, arg GetUserContestParams) (SfUserContest, error)
+	GetUserContestsByContestID(ctx context.Context, contestID int64) ([]GetUserContestsByContestIDRow, error)
+	GetUserContestsJoined(ctx context.Context, userID int64) ([]GetUserContestsJoinedRow, error)
+	GetUsersInContest(ctx context.Context, contestID int64) ([]GetUsersInContestRow, error)
+	StartContest(ctx context.Context, id int64) error
+	StopContest(ctx context.Context, id int64) error
+	UpdateContest(ctx context.Context, arg UpdateContestParams) (SfContest, error)
+	UpdateContestQuestions(ctx context.Context, arg UpdateContestQuestionsParams) error
+	UpdateContestStateAndQuestions(ctx context.Context, arg UpdateContestStateAndQuestionsParams) error
+	UpdateExamAndResult(ctx context.Context, arg UpdateExamAndResultParams) error
 	UpdateQuestion(ctx context.Context, arg UpdateQuestionParams) (SfQuestion, error)
+	UpdateStateContest(ctx context.Context, arg UpdateStateContestParams) error
 	UpdateSubject(ctx context.Context, arg UpdateSubjectParams) (UpdateSubjectRow, error)
 	UpdateUserRole(ctx context.Context, arg UpdateUserRoleParams) error
 	UpdateUserToken(ctx context.Context, arg UpdateUserTokenParams) error

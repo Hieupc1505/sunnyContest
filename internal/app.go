@@ -20,6 +20,10 @@ var (
 	ErrAccountDisabled   = errors.New("account is disabled")
 	ErrAccountDeleted    = errors.New("account is deleted")
 	ErrUserAlreadyExists = errors.New("user is already in use")
+
+	ErrContestSubmitAlready = errors.New("contest.live.submit_already")
+	ErrContestNotFound      = errors.New("invalid_data.contest.notfound")
+	ErrInvalidContestGameID = errors.New("invalid_data.contest.game_id")
 )
 
 const (

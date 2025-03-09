@@ -11,6 +11,7 @@ type Reader interface {
 	GetQuestionByID(ctx context.Context, id int64) (db.SfQuestion, error)
 	GetQuestionBySubjectID(ctx context.Context, arg db.GetQuestionBySubjectIDParams) ([]db.SfQuestion, error)
 	GetTotalQuestion(ctx context.Context, subjectID int64) (int64, error)
+	GetRandomQuestions(ctx context.Context, arg db.GetRandomQuestionsParams) ([]db.SfQuestion, error)
 }
 
 // Writer NewReader returns
@@ -18,6 +19,7 @@ type Writer interface {
 	AddQuestion(ctx context.Context, arg db.AddQuestionParams) (db.SfQuestion, error)
 	DeleteQuestion(ctx context.Context, id int64) error
 	UpdateQuestion(ctx context.Context, arg db.UpdateQuestionParams) (db.SfQuestion, error)
+	UpdateContestQuestions(ctx context.Context, arg db.UpdateContestQuestionsParams) error
 }
 
 // ReadWriter NewWriter creates a new Writer
@@ -26,7 +28,7 @@ type ReadWriter interface {
 	Writer
 }
 
-// NewSubjectRepo create a new user repo
+// NewQuestionService create a new user repo
 func NewQuestionService(conn *pgxpool.Pool) ReadWriter {
 	return db.New(conn)
 }

@@ -135,8 +135,11 @@ func GetTotal(h *handler.Handler) gin.HandlerFunc {
 			return
 		}
 
+		var rsp []struct{ Total int64 }
+		rsp = append(rsp, struct{ Total int64 }{Total: total})
+
 		// Trả về kết quả
-		response.Success(c, gin.H{"total": total})
+		response.Success(c, rsp)
 	}
 }
 func GetList(h *handler.Handler) gin.HandlerFunc {

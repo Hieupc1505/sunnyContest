@@ -5,6 +5,9 @@
       <functions>
         <function importPath="go-rest-api-boilerplate/internal/services/account" name="NewUpdateTokenParam" />
       </functions>
+      <methods>
+        <method importPath="go-rest-api-boilerplate/internal/db/repo/user_contest" receiver="ReadWriter" name="GetUserContest" />
+      </methods>
     </inspection_tool>
   </profile>
 </component>

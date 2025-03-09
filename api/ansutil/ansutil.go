@@ -3,8 +3,8 @@ package ansutil
 import (
 	"fmt"
 	app "go-rest-api-boilerplate/internal"
-	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/pkg/imgUploader"
+	"go-rest-api-boilerplate/types"
 	"log/slog"
 	"strings"
 	"sync"
@@ -15,12 +15,12 @@ const (
 )
 
 type AnswersHandler interface {
-	Handle(answers []db.AnswerItem, i imgUploader.IUploadImage) ([]db.AnswerItem, error)
+	Handle(answers []types.AnswerItem, i imgUploader.IUploadImage) ([]types.AnswerItem, error)
 }
 
 type AnswerImg struct{}
 
-func (a *AnswerImg) Handle(answers []db.AnswerItem, uploader imgUploader.IUploadImage) ([]db.AnswerItem, error) {
+func (a *AnswerImg) Handle(answers []types.AnswerItem, uploader imgUploader.IUploadImage) ([]types.AnswerItem, error) {
 	var wg sync.WaitGroup
 	errCh := make(chan error, 1)  // Channel để nhận lỗi đầu tiên
 	doneCh := make(chan struct{}) // Channel để gửi tín hiệu hủy bỏ
@@ -28,7 +28,7 @@ func (a *AnswerImg) Handle(answers []db.AnswerItem, uploader imgUploader.IUpload
 
 	for i := range answers {
 		wg.Add(1)
-		go func(item *db.AnswerItem) { // Truyền con trỏ để thay đổi giá trị gốc
+		go func(item *types.AnswerItem) { // Truyền con trỏ để thay đổi giá trị gốc
 			defer wg.Done()
 
 			// Kiểm tra xem có tín hiệu hủy bỏ không
@@ -76,7 +76,7 @@ func (a *AnswerImg) Handle(answers []db.AnswerItem, uploader imgUploader.IUpload
 
 type AnswerText struct{}
 
-func (a *AnswerText) Handle(answers []db.AnswerItem, _ imgUploader.IUploadImage) ([]db.AnswerItem, error) {
+func (a *AnswerText) Handle(answers []types.AnswerItem, _ imgUploader.IUploadImage) ([]types.AnswerItem, error) {
 	return answers, nil
 }
 

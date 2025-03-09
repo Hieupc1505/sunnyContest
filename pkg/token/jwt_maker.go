@@ -3,6 +3,7 @@ package token
 import (
 	"errors"
 	"fmt"
+	app "go-rest-api-boilerplate/internal"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -45,8 +46,8 @@ func (m *JWTmaker) VerifyToken(token string) (*Payload, error) {
 	}
 	jwtToken, err := jwt.ParseWithClaims(token, &Payload{}, keyFunc)
 	if err != nil {
-		if errors.Is(err, ErrExpiredToken) {
-			return nil, ErrExpiredToken
+		if errors.Is(err, app.ErrTokenExpired) {
+			return nil, err
 		}
 		return nil, ErrInvalidToken
 	}

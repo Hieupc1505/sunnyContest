@@ -2,10 +2,10 @@ package question
 
 import (
 	"encoding/json"
-	db "go-rest-api-boilerplate/internal/db/sqlc"
+	"go-rest-api-boilerplate/types"
 )
 
-type Answers []db.AnswerItem
+type Answers []types.AnswerItem
 
 func (a Answers) String() string {
 	val, err := json.Marshal(a)
@@ -15,7 +15,7 @@ func (a Answers) String() string {
 	return string(val)
 }
 
-func NewAnswers(arr []db.AnswerItem) (*Answers, error) {
+func NewAnswers(arr []types.AnswerItem) (*Answers, error) {
 	ans := Answers(arr) // Convert slice to Answers type
 	return &ans, nil    // Return pointer to Answers
 }

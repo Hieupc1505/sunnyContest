@@ -10,6 +10,7 @@ import (
 type Reader interface {
 	CheckUsernameExists(ctx context.Context, username string) (bool, error)
 	GetUserByUsername(ctx context.Context, username string) (db.GetUserByUsernameRow, error)
+	GetUserByID(ctx context.Context, id int64) (db.GetUserByIDRow, error)
 }
 
 // Writer NewReader returns

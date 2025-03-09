@@ -6,11 +6,56 @@ package db
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
+
+type ContestState string
+
+const (
+	ContestStateIDLE     ContestState = "IDLE"
+	ContestStateRUNNING  ContestState = "RUNNING"
+	ContestStateFINISHED ContestState = "FINISHED"
+	ContestStateWAITING  ContestState = "WAITING"
+)
+
+func (e *ContestState) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ContestState(s)
+	case string:
+		*e = ContestState(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ContestState: %T", src)
+	}
+	return nil
+}
+
+type NullContestState struct {
+	ContestState ContestState `json:"contest_state"`
+	Valid        bool         `json:"valid"` // Valid is true if ContestState is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullContestState) Scan(value interface{}) error {
+	if value == nil {
+		ns.ContestState, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.ContestState.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullContestState) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.ContestState), nil
+}
 
 type LevelQuestion string
 
@@ -53,6 +98,19 @@ func (ns NullLevelQuestion) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	return string(ns.LevelQuestion), nil
+}
+
+type SfContest struct {
+	ID            int64              `json:"id"`
+	UserID        int64              `json:"user_id"`
+	SubjectID     int64              `json:"subject_id"`
+	NumQuestion   int32              `json:"num_question"`
+	TimeExam      int32              `json:"time_exam"`
+	TimeStartExam pgtype.Timestamptz `json:"time_start_exam"`
+	State         ContestState       `json:"state"`
+	Questions     string             `json:"questions"`
+	CreatedTime   time.Time          `json:"created_time"`
+	UpdatedTime   time.Time          `json:"updated_time"`
 }
 
 type SfProfile struct {
@@ -100,4 +158,15 @@ type SfUser struct {
 	TokenExpired pgtype.Timestamptz `json:"token_expired"`
 	CreatedTime  time.Time          `json:"created_time"`
 	UpdatedTime  time.Time          `json:"updated_time"`
+}
+
+type SfUserContest struct {
+	ID          int64           `json:"id"`
+	ContestID   int64           `json:"contest_id"`
+	UserID      int64           `json:"user_id"`
+	Questions   json.RawMessage `json:"questions"`
+	Exam        []byte          `json:"exam"`
+	Result      []byte          `json:"result"`
+	CreatedTime time.Time       `json:"created_time"`
+	UpdatedTime time.Time       `json:"updated_time"`
 }

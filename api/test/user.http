@@ -32,3 +32,4 @@ Authorization: Bearer {{access_token_jwt}}
   "nickname": "theking-origin",
   "type": 9
 }
+

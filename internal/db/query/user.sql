@@ -26,6 +26,21 @@ FROM sf_user u
 WHERE u.username = $1
     LIMIT 1;
 
+-- name: GetUserByID :one
+SELECT
+    u.id,
+    u.username,
+    u.role,
+    u.status,
+    u.created_time,
+    u.updated_time,
+    COALESCE(p.nickname, '') AS nickname,
+    COALESCE(p.avatar, '') AS avatar
+FROM sf_user u
+LEFT JOIN sf_profile p ON u.id = p.user_id
+WHERE u.id = $1
+LIMIT 1;
+
 -- name: UpdateUserToken :exec
 UPDATE sf_user
 SET token = $2, token_expired = $3, updated_time = now()

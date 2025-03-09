@@ -7,13 +7,17 @@ import (
 	config "go-rest-api-boilerplate/configs/app"
 	"go-rest-api-boilerplate/configs/logger"
 	"go-rest-api-boilerplate/internal/db/repo"
+	contest_repo "go-rest-api-boilerplate/internal/db/repo/contest"
 	question_repo "go-rest-api-boilerplate/internal/db/repo/question"
 	subject_repo "go-rest-api-boilerplate/internal/db/repo/subject"
 	user_repo "go-rest-api-boilerplate/internal/db/repo/user"
+	user_contest_repo "go-rest-api-boilerplate/internal/db/repo/user_contest"
 	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/internal/services/account"
+	"go-rest-api-boilerplate/internal/services/contest"
 	"go-rest-api-boilerplate/internal/services/question"
 	"go-rest-api-boilerplate/internal/services/subject"
+	"go-rest-api-boilerplate/internal/services/user_contest"
 	"log"
 	"log/slog"
 	"os"
@@ -61,7 +65,20 @@ func main() {
 	if err != nil {
 		log.Fatal("Error creating question service: ", err)
 	}
-	store := repo.New(userRepo, accountService, subRepo, subService, quesRepo, quesService)
+
+	contestRepo := contest_repo.NewContestService(conn)
+	contestService, err := contest.NewService(ctx, contestRepo)
+	if err != nil {
+		log.Fatal("Error creating question service: ", err)
+	}
+
+	userContest := user_contest_repo.NewUserContestService(conn)
+	userContestService, err := user_contest.NewService(ctx, userContest)
+	if err != nil {
+		log.Fatal("Error creating user contest service: ", err)
+	}
+
+	store := repo.New(userRepo, accountService, subRepo, subService, quesRepo, quesService, contestRepo, contestService, userContest, userContestService)
 
 	envPort, err := strconv.ParseInt(config.Envs.Port, 0, 64)
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/jackc/pgx/v5/pgtype"
 	db "go-rest-api-boilerplate/internal/db/sqlc"
+	"go-rest-api-boilerplate/types"
 )
 
 const (
@@ -11,14 +12,14 @@ const (
 )
 
 type QuestionParams struct {
-	ID            int64           `json:"id"`
-	SubjectID     int             `json:"subject_id"`
-	Level         string          `json:"level"`
-	Question      string          `json:"question"`
-	QuestionImage string          `json:"question_image"`
-	QuestionType  string          `json:"question_type"`
-	AnswerType    string          `json:"answer_type"`
-	Answers       []db.AnswerItem `json:"answers"`
+	ID            int64              `json:"id"`
+	SubjectID     int                `json:"subject_id"`
+	Level         string             `json:"level"`
+	Question      string             `json:"question"`
+	QuestionImage string             `json:"question_image"`
+	QuestionType  string             `json:"question_type"`
+	AnswerType    string             `json:"answer_type"`
+	Answers       []types.AnswerItem `json:"answers"`
 }
 
 func NewSfQuestion(subjectID int64, level Level, question Question, questionType QuestionType, img Image, answerType AnswerType, answers Answers) *db.SfQuestion {
@@ -74,8 +75,38 @@ func ConvertToUpdateQuestionParams(q QuestionParams, state int32) db.UpdateQuest
 	}
 }
 
+func NewRandomQuestionParams(subjectID int64, limit int32) *db.GetRandomQuestionsParams {
+	return &db.GetRandomQuestionsParams{
+		SubjectID: subjectID,
+		Limit:     limit,
+	}
+}
+
+func NewQuestionFromSfQuestion(question db.SfQuestion) *types.Question {
+	return &types.Question{
+		ID:            question.ID,
+		SubjectID:     question.SubjectID,
+		UserID:        question.UserID,
+		Level:         string(question.Level),
+		Question:      question.Question,
+		QuestionType:  question.QuestionType,
+		QuestionImage: question.QuestionImage.String,
+		Answers:       ConvertAnswersToJson(question.Answers),
+		AnswerType:    question.AnswerType,
+		State:         question.State,
+		CreatedTime:   question.CreatedTime,
+		UpdatedTime:   question.UpdatedTime,
+	}
+}
+
 // Hàm giả định để chuyển đổi danh sách câu trả lời thành string
-func ConvertAnswersToString(answers []db.AnswerItem) string {
+func ConvertAnswersToString(answers []types.AnswerItem) string {
 	bytes, _ := json.Marshal(answers)
 	return string(bytes)
+}
+
+func ConvertAnswersToJson(answers string) []types.AnswerItem {
+	var result []types.AnswerItem
+	_ = json.Unmarshal([]byte(answers), &result)
+	return result
 }

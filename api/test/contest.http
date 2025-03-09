@@ -1,0 +1,37 @@
+@base=http://localhost:8080
+@auth=/api/v1/public
+@main=/api/v1/web
+@contest=/api/v1/contest
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZiYzM3NGE3LTYzZTMtNGY0Zi1hNDhkLTExN2EwNzVhNGZmNiIsInVzZXJfaWQiOjIsInJvbGUiOjQsImlzc3VlZF9hdCI6IjIwMjUtMDMtMDVUMjI6MDE6NDIuNTQ0MDY5MTkxKzA3OjAwIiwiZXhwaXJlZF9hdCI6IjIwMjUtMDMtMDZUMjI6MDE6NDIuNTQ0MDY5MzcxKzA3OjAwIn0.MwnsqMhnAzWlLkG41mFJsD-M0hNOcmGzx5cEGWyfyPQ
+
+
+### Play contest
+POST {{base}}{{contest}}/play/8
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Start Contest
+GET {{base}}{{contest}}/start/8
+Authorization: Bearer {{token}}
+
+### Submit Contest
+POST {{base}}{{contest}}/70/submit-paper
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "answers": [
+    {
+      "question_id": 1,
+      "index": 0
+    },
+    {
+      "question_id": 2,
+      "index": 0
+    },
+    {
+      "question_id": 3,
+      "index": 0
+    }
+  ]
+}

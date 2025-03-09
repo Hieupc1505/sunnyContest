@@ -6,10 +6,11 @@ import (
 	app "go-rest-api-boilerplate/internal"
 	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/pkg/errsx"
+	"go-rest-api-boilerplate/types"
 	"log/slog"
 )
 
-func newQuestion(subjectID int, q, answerType, level, questionImage, questionType string, answers []db.AnswerItem) (*QuestionParams, error) {
+func newQuestion(subjectID int, q, answerType, level, questionImage, questionType string, answers []types.AnswerItem) (*QuestionParams, error) {
 	var errs errsx.Map
 	nq, err := NewQuestion(q)
 	if err != nil {
