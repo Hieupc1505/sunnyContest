@@ -16,7 +16,7 @@ WHERE id = $1;
 
 -- name: StartContest :exec
 UPDATE sf_contest
-SET state = 'RUNNING', time_start_exam = now()
+SET state = 'RUNNING', time_start_exam = $2
 WHERE id = $1;
 
 -- name: StopContest :exec

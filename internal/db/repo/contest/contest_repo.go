@@ -19,7 +19,7 @@ type Reader interface {
 
 // Writer NewReader returns
 type Writer interface {
-	StartContest(ctx context.Context, id int64) error
+	StartContest(ctx context.Context, arg db.StartContestParams) error
 	StopContest(ctx context.Context, id int64) error
 	UpdateContest(ctx context.Context, arg db.UpdateContestParams) (db.SfContest, error)
 	CreateContest(ctx context.Context, arg db.CreateContestParams) (db.SfContest, error)

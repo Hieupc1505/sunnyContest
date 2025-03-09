@@ -362,12 +362,17 @@ func (q *Queries) GetRandomQuestions(ctx context.Context, arg GetRandomQuestions
 
 const startContest = `-- name: StartContest :exec
 UPDATE sf_contest
-SET state = 'RUNNING', time_start_exam = now()
+SET state = 'RUNNING', time_start_exam = $2
 WHERE id = $1
 `
 
-func (q *Queries) StartContest(ctx context.Context, id int64) error {
-	_, err := q.db.Exec(ctx, startContest, id)
+type StartContestParams struct {
+	ID            int64              `json:"id"`
+	TimeStartExam pgtype.Timestamptz `json:"time_start_exam"`
+}
+
+func (q *Queries) StartContest(ctx context.Context, arg StartContestParams) error {
+	_, err := q.db.Exec(ctx, startContest, arg.ID, arg.TimeStartExam)
 	return err
 }
 

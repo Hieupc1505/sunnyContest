@@ -57,4 +57,5 @@ func (a *API) registerRoutes() {
 		time.Sleep(time.Second)
 		response.Success(ctx, gin.H{"Status": "Pong test connect"})
 	})
+
 }

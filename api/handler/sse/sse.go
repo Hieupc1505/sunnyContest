@@ -78,7 +78,6 @@ func registerClientAndSendMessages(hub maker.IHub, client maker.IClient, contest
 	client.SendMessage(message)
 	time.Sleep(100 * time.Millisecond)
 	hub.Broadcast(sseutil.NewSseRes(types.UserJoin, hub.GetUsers(contestInfo.UserID)))
-
 }
 
 func handleDisconnect(hub maker.IHub, client maker.IClient) {

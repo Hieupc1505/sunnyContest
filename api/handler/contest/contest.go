@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgtype"
 	"go-rest-api-boilerplate/api/contextutil"
 	"go-rest-api-boilerplate/api/handler"
 	"go-rest-api-boilerplate/api/middleware"
@@ -17,6 +18,7 @@ import (
 	"go-rest-api-boilerplate/types"
 	"log/slog"
 	"strconv"
+	"time"
 )
 
 func Routes(h *handler.Handler) {
@@ -289,10 +291,24 @@ func StartContest(h *handler.Handler) gin.HandlerFunc {
 			return
 		}
 
-		// Kích hoạt bộ đếm thời gian
-		go hub.StartTimer(contestInfo.TimeExam)
+		timeStart := time.Now()
 
-		if err := h.ContestRepo.StartContest(ctx, contestInt); err != nil {
+		// Kích hoạt bộ đếm thời gian
+		go hub.StartTimer(timeStart, contestInfo.TimeExam)
+
+		message := sseutil.NewSseRes(types.ContestInfo, types.TimeStartExam{
+			timeStart.UnixMilli(),
+		})
+		hub.Broadcast(message)
+
+		timeParam := pgtype.Timestamptz{
+			Time:  timeStart, // timeStart phải là kiểu time.Time
+			Valid: true,      // Phải set Valid = true nếu muốn giá trị có hiệu lực
+		}
+		if err := h.ContestRepo.StartContest(ctx, db.StartContestParams{
+			ID:            contestInt,
+			TimeStartExam: timeParam,
+		}); err != nil {
 			response.Error(ctx, app.ErrInternalServerError)
 			return
 		}

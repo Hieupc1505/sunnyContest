@@ -37,7 +37,7 @@ type Querier interface {
 	GetUserContestsByContestID(ctx context.Context, contestID int64) ([]GetUserContestsByContestIDRow, error)
 	GetUserContestsJoined(ctx context.Context, userID int64) ([]GetUserContestsJoinedRow, error)
 	GetUsersInContest(ctx context.Context, contestID int64) ([]GetUsersInContestRow, error)
-	StartContest(ctx context.Context, id int64) error
+	StartContest(ctx context.Context, arg StartContestParams) error
 	StopContest(ctx context.Context, id int64) error
 	UpdateContest(ctx context.Context, arg UpdateContestParams) (SfContest, error)
 	UpdateContestQuestions(ctx context.Context, arg UpdateContestQuestionsParams) error

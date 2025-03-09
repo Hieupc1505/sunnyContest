@@ -17,3 +17,7 @@ const (
 	ContestCountDown SseStatus = "contest_countdown"
 	ErrContest                 = "err_contest"
 )
+
+type TimeStartExam struct {
+	TimeStartExam int64 `json:"time_start_exam"`
+}

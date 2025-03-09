@@ -130,10 +130,6 @@ func (c *Client) writeMessage(data *sseutil.SseRes) error {
 }
 
 func (c *Client) ReceiveMessage() {
-	defer func() {
-		log.Println("Client ReceiveMessage disconnected")
-	}()
-
 	for {
 		select {
 		case message := <-c.Send:

@@ -4,6 +4,7 @@ import (
 	"go-rest-api-boilerplate/api/sseutil"
 	db "go-rest-api-boilerplate/internal/db/sqlc"
 	"go-rest-api-boilerplate/types"
+	"time"
 )
 
 // ClientManager quản lý việc đăng ký / hủy đăng ký client
@@ -40,7 +41,7 @@ type HubRunner interface {
 
 type ContestAction interface {
 	GetUsers(ownerContestID int64) []types.ContestItemResult
-	StartTimer(endTime int32)
+	StartTimer(startTime time.Time, endTime int32)
 	EndContest()
 	GetQuestions() []types.Question
 	SetQuestions(questions []db.SfQuestion)

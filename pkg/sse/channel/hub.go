@@ -191,12 +191,12 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) StartTimer(timeExam int32) {
+func (h *Hub) StartTimer(startTime time.Time, timeExam int32) {
 	ticker := time.NewTicker(15 * time.Second)
 	defer ticker.Stop()
 
 	duration := time.Duration(timeExam) * time.Minute
-	startTime := time.Now()
+	//startTime := time.Now()
 	endTime := startTime.Add(duration)
 
 	h.timeStart = endTime
@@ -248,13 +248,15 @@ func (h *Hub) StopTimer() {
 
 func (h *Hub) Close() {
 	// Đợi 1 phút trước khi gửi thông báo ClosedContest
-	time.Sleep(1 * time.Minute)
+	timeWaitToSeeResult := 10 * time.Second
+	timeHandleSendClosedMessage := 5 * time.Second
+	time.Sleep(timeWaitToSeeResult)
 
 	// Gửi thông báo ClosedContest
 	h.Broadcast(sseutil.NewSseRes(types.CloseContest, gin.H{
 		"id": h.ID,
 	}))
-	time.Sleep(10 * time.Second)
+	time.Sleep(timeHandleSendClosedMessage)
 	h.done <- struct{}{}
 }
 
